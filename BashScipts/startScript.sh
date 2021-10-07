@@ -1,21 +1,15 @@
 #!/bin/bash
 
-# Script som starter servere og servicen
+# Script som starter serveren.
+# Apache blir installert og satt opp i server-data.sh
 
-# Endre user-data path til riktig på manager VM
 
-openstack server create \
---flavor m1.small \
---image 1676adb4-9657-42ed-b31f-b3907cbcd697 \
---key-name Manager \
---security-group default \
---user-data /home/ubuntu/git/DCSG2003/vms/server/server-data.sh \
-server1
 
 openstack server create \
 --flavor m1.small \
 --image 1676adb4-9657-42ed-b31f-b3907cbcd697 \
 --key-name Manager \
 --security-group default \
---user-data /home/ubuntu/git/DCSG2003/vms/server/server-data.sh \
-server2
+--user-data /home/ubuntu/iac/BashScipts/server-data.sh \
+webserver
+
