@@ -30,7 +30,7 @@ printf "
     <title>IaC Project</title>
 </head>
 <body>
-    <h1>Hello :D This is a website</h1>
+    <h1>Hello :D This is a website for IaC group 5</h1>
 </body>
 </html>
 " > /home/ubuntu/index.html
