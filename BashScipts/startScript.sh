@@ -11,6 +11,6 @@ openstack server create \
 --key-name manager \
 --security-group default \
 --network net1 \
---user-data /home/ubuntu/iac/BashScipts/server-data.sh \
+--user-data /home/ubuntu/iac/BashScipts/server-data2.sh \
 webserver
 
