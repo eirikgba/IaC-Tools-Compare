@@ -8,7 +8,7 @@
 openstack server create \
 --flavor m1.small \
 --image 1676adb4-9657-42ed-b31f-b3907cbcd697 \
---key-name eirikgba-IaC \
+--key-name manager \
 --security-group default \
 --network net1
 --user-data /home/ubuntu/iac/BashScipts/server-data.sh \
