@@ -38,16 +38,12 @@ printf "
 sleep 1
 
 # Dockerfile
-printf "
-FROM httpd:2.4
-COPY ./public-html/ /usr/local/apache2/htdocs/
-" > /home/ubuntu/Dockerfile
+
 
 sleep 1
 
 # Build and run
-sudo docker build -t my-apache2 .
-sudo docker run -dit --name my-running-app -p 8080:80 my-apache2
+docker run -dit --name my-apache-app -p 8080:80 -v "$PWD":/usr/local/apache2/htdocs/ httpd:2.4
 
 final_message: "Ferdig!!"
 echo "Ferdig"
