@@ -6,8 +6,9 @@ description: >
 
 parameters:
   key_name:
-    type: ubuntu-IaC
+    type: string
     description: Name of keypair to assign to servers
+    default: ubuntu-iac
 
 resources:
   private_net:
