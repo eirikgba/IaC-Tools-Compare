@@ -67,7 +67,7 @@ sudo ufw allow 443/tcp
 sudo cat /var/lib/rancher/k3s/server/node-token
 ```
 
-K10a62e3c1e91a340d14c2eeaabf4d3c59aed376c604a2833b30824818e2540cb5d::server:f5e1b7b8b5ff93a155e16e227dee78e2
+
 
 
 
