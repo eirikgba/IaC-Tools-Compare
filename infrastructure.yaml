@@ -2,8 +2,7 @@ heat_template_version: 2013-05-23
 
 description: >
   HOT template to create a new neutron network plus a router to the public
-  network, and for deploying a single instance (most recent Ubuntu) with a 
-  floating ip.
+  network, and for deploying 9 ubuntu instances
 
 parameters:
   key_name: 
@@ -45,6 +44,20 @@ resources:
       key_name: { get_param: key_name }
       networks:
         - port: { get_resource: server_port }
+  ansible-master_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net }
+      security_groups: 
+        - { get_resource: server_security_group }
+      fixed_ips:
+        - subnet_id: { get_resource: private_subnet }
+
+  ansible_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: ntnu-internal
+      port_id: { get_resource: server_port }
 
   ansible-slave1:
     type: OS::Nova::Server
@@ -54,6 +67,20 @@ resources:
       key_name: { get_param: key_name }
       networks:
         - port: { get_resource: server_port }
+  ansible-slave1_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net }
+      security_groups: 
+        - { get_resource: server_security_group }
+      fixed_ips:
+        - subnet_id: { get_resource: private_subnet }
+
+  ansible-slave1_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: ntnu-internal
+      port_id: { get_resource: server_port }
 
   ansible-slave2:
     type: OS::Nova::Server
@@ -63,6 +90,20 @@ resources:
       key_name: { get_param: key_name }
       networks:
         - port: { get_resource: server_port }
+  ansible-slave2_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net }
+      security_groups: 
+        - { get_resource: server_security_group }
+      fixed_ips:
+        - subnet_id: { get_resource: private_subnet }
+
+  ansible-slave2_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: ntnu-internal
+      port_id: { get_resource: server_port }
 
   puppet-master:
     type: OS::Nova::Server
@@ -72,6 +113,21 @@ resources:
       key_name: { get_param: key_name }
       networks:
         - port: { get_resource: server_port }
+  
+  puppet-master_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net }
+      security_groups: 
+        - { get_resource: server_security_group }
+      fixed_ips:
+        - subnet_id: { get_resource: private_subnet }
+
+  puppet-master_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: ntnu-internal
+      port_id: { get_resource: server_port }
 
   puppet-slave1:
     type: OS::Nova::Server
@@ -81,6 +137,21 @@ resources:
       key_name: { get_param: key_name }
       networks:
         - port: { get_resource: server_port }
+  
+  puppet-slave1_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net }
+      security_groups: 
+        - { get_resource: server_security_group }
+      fixed_ips:
+        - subnet_id: { get_resource: private_subnet }
+
+  puppet-slave1_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: ntnu-internal
+      port_id: { get_resource: server_port }
 
   puppet-slave2:
     type: OS::Nova::Server
@@ -90,6 +161,21 @@ resources:
       key_name: { get_param: key_name }
       networks:
         - port: { get_resource: server_port }
+  
+  puppet-slave2_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net }
+      security_groups: 
+        - { get_resource: server_security_group }
+      fixed_ips:
+        - subnet_id: { get_resource: private_subnet }
+
+  puppet-slave2_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: ntnu-internal
+      port_id: { get_resource: server_port }
 
   kubernetes-master:
     type: OS::Nova::Server
@@ -99,6 +185,21 @@ resources:
       key_name: { get_param: key_name }
       networks:
         - port: { get_resource: server_port }
+  
+  kubernetes-master_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net }
+      security_groups: 
+        - { get_resource: server_security_group }
+      fixed_ips:
+        - subnet_id: { get_resource: private_subnet }
+
+  kubernetes-master_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: ntnu-internal
+      port_id: { get_resource: server_port }
 
   kubernetes-slave1:
     type: OS::Nova::Server
@@ -108,6 +209,21 @@ resources:
       key_name: { get_param: key_name }
       networks:
         - port: { get_resource: server_port }
+  
+  kubernetes-slave1_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net }
+      security_groups: 
+        - { get_resource: server_security_group }
+      fixed_ips:
+        - subnet_id: { get_resource: private_subnet }
+
+  kubernetes-slave1_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: ntnu-internal
+      port_id: { get_resource: server_port }
 
   kubernetes-slave2:
     type: OS::Nova::Server
@@ -117,8 +233,8 @@ resources:
       key_name: { get_param: key_name }
       networks:
         - port: { get_resource: server_port }
-
-  server_port:
+  
+  kubernetes-slave2_port:
     type: OS::Neutron::Port
     properties:
       network_id: { get_resource: private_net }
@@ -127,11 +243,12 @@ resources:
       fixed_ips:
         - subnet_id: { get_resource: private_subnet }
 
-  server_floating_ip:
+  kubernetes-slave2_floating_ip:
     type: OS::Neutron::FloatingIP
     properties:
       floating_network: ntnu-internal
       port_id: { get_resource: server_port }
+
 
   server_security_group:
     type: OS::Neutron::SecurityGroup
@@ -155,9 +272,21 @@ resources:
 
 
 outputs:
-  server_private_ip:
-    description: IP address of server in private network
-    value: { get_attr: [ server, first_address ] }
-  server_public_ip:
-    description: Floating IP address of server in public network
-    value: { get_attr: [ server_floating_ip, floating_ip_address ] }
+  ansible-master_private_ip:
+    description: IP address of srv1 in private network
+    value: { get_attr: [ srv1, first_address ] }
+  ansibel-master_public_ip:
+    description: Floating IP address of srv1 in public network
+    value: { get_attr: [ srv1_floating_ip, floating_ip_address ] }
+  puppet-master_private_ip:
+    description: IP address of dc1 in private network
+    value: { get_attr: [ dc1, first_address ] }
+  puppet-master_public_ip:
+    description: Floating IP address of dc1 in public network
+    value: { get_attr: [ dc1_floating_ip, floating_ip_address ] }
+  kubernetes_private_ip:
+    description: IP address of cl1 in private network
+    value: { get_attr: [ cl1, first_address ] }
+  kubernetes_public_ip:
+    description: Floating IP address of cl1 in public network
+    value: { get_attr: [ cl1_floating_ip, floating_ip_address ] }
