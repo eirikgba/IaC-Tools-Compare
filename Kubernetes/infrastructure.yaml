@@ -73,7 +73,7 @@ resources:
       key_name: { get_param: key_name }
       networks:
         - port: { get_resource: k8s-master_port }
-        }
+        
   k8s-master_port:
     type: OS::Neutron::Port
     properties:
