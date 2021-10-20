@@ -1,0 +1,158 @@
+heat_template_version: 2013-05-23
+
+description: >
+  HOT template to create a new neutron network plus a router to the public
+  network, and for deploying a k8s cluster with one master and two workers.
+
+parameters:
+  key_name:
+    type: ubuntu-IaC
+    description: Name of keypair to assign to servers
+
+resources:
+  private_net:
+    type: OS::Neutron::Net
+
+  private_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      network_id: { get_resource: private_net }
+      cidr: 192.168.1.0/24
+      gateway_ip: 192.168.1.1
+      allocation_pools:
+        - start: 192.168.1.101
+          end: 192.168.1.200
+
+  router:
+    type: OS::Neutron::Router
+    properties:
+      external_gateway_info:
+        network: ntnu-internal
+
+  router_interface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: router }
+      subnet_id: { get_resource: private_subnet }
+
+  sec_core:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      description: Security group rules for all
+      name: sec_core
+      rules:
+        - remote_ip_prefix: 0.0.0.0/0
+          protocol: icmp
+        - remote_ip_prefix: 0.0.0.0/0
+          protocol: tcp
+          port_range_min: 22
+          port_range_max: 22
+        - remote_ip_prefix: 0.0.0.0/0
+          protocol: tcp
+          port_range_min: 80
+          port_range_max: 80
+        - remote_ip_prefix: 0.0.0.0/0
+          protocol: tcp
+          port_range_min: 443
+          port_range_max: 443
+        - remote_ip_prefix: 0.0.0.0/0
+          protocol: tcp
+          port_range_min: 3389
+          port_range_max: 3389
+          - remote_ip_prefix: 0.0.0.0/0
+          protocol: tcp
+          port_range_min: 6443
+          port_range_max: 6443
+
+  k8s-master:
+    type: OS::Nova::Server
+    properties:
+      name: k8s-master
+      image: 'Windows 10 20H2 Enterprise [Evaluation]'
+      flavor: m1.small
+      key_name: { get_param: key_name }
+      networks:
+        - port: { get_resource: k8s-master_port }
+        }
+  k8s-master_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net }
+      security_groups: 
+        - default
+        - { get_resource: sec_core }
+      fixed_ips:
+        - subnet_id: { get_resource: private_subnet }
+  k8s-master_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: ntnu-internal
+      port_id: { get_resource: k8s-master_port }
+
+  k8s-worker1:
+    type: OS::Nova::Server
+    properties:
+      name: k8s-worker1
+      image: 'Windows Server 2019 Standard [Evaluation]'
+      flavor: m1.small
+      key_name: { get_param: key_name }
+      networks:
+        - port: { get_resource: k8s-worker1_port }
+  k8s-worker1_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net }
+      security_groups: 
+        - default
+        - { get_resource: sec_core }
+      fixed_ips:
+        - subnet_id: { get_resource: private_subnet }
+  k8s-worker1_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: ntnu-internal
+      port_id: { get_resource: k8s-worker1_port }
+
+  k8s-worker2:
+    type: OS::Nova::Server
+    properties:
+      name: k8s-worker2
+      image: 'Windows Server 2019 Standard [Evaluation]'
+      flavor: m1.small
+      key_name: { get_param: key_name }
+      networks:
+        - port: { get_resource: k8s-worker2_port }
+  k8s-worker2_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net }
+      security_groups: 
+        - default
+        - { get_resource: sec_core }
+      fixed_ips:
+        - subnet_id: { get_resource: private_subnet }
+  k8s-worker2_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: ntnu-internal
+      port_id: { get_resource: k8s-worker2_port }
+
+outputs:
+  k8s-worker2_private_ip:
+    description: IP address of k8s-worker2 in private network
+    value: { get_attr: [ k8s-worker2, first_address ] }
+  k8s-worker2_public_ip:
+    description: Floating IP address of k8s-worker2 in public network
+    value: { get_attr: [ k8s-worker2_floating_ip, floating_ip_address ] }
+  k8s-worker1_private_ip:
+    description: IP address of k8s-worker1 in private network
+    value: { get_attr: [ k8s-worker1, first_address ] }
+  k8s-worker1_public_ip:
+    description: Floating IP address of k8s-worker1 in public network
+    value: { get_attr: [ k8s-worker1_floating_ip, floating_ip_address ] }
+  k8s-master_private_ip:
+    description: IP address of k8s-master in private network
+    value: { get_attr: [ k8s-master, first_address ] }
+  k8s-master_public_ip:
+    description: Floating IP address of k8s-master in public network
+    value: { get_attr: [ k8s-master_floating_ip, floating_ip_address ] }
