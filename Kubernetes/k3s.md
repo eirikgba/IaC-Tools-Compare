@@ -142,6 +142,18 @@ spec:
       nodePort: 30007
 ```
 
+
+
+*Apply*
+
+```
+sudo kubectl apply -f nginx-deployment.yaml
+
+sudo kubectl apply -f nginx-nodeport.yaml
+```
+
+
+
 Nginx is now exposed on oneOfTheNodesIP:30007
 
 
