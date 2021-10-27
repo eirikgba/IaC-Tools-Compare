@@ -72,6 +72,9 @@ resources:
       image: 'Ubuntu Server 20.04 LTS (Focal Fossa) amd64'
       flavor: m1.small
       key_name: { get_param: key_name }
+      user_data:
+        str_replace:
+          template: {get_file: init.sh}
       networks:
         - port: { get_resource: master_port }
         
