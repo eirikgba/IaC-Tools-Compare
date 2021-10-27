@@ -1,0 +1,8 @@
+---
+- hosts: webserver
+  roles:
+   - web/nginx
+  tags: nginx,web
+  become: yes
+  become_user: root
+
