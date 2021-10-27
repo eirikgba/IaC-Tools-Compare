@@ -90,6 +90,15 @@ resources:
         sudo usermod -aG docker ubuntu
         newgrp docker
 
+        echo "
+        {
+        "insecure-registries" : [ "10.212.141.146:5000" ]
+        }
+        " >  
+        sudo systemctl daemon-reload
+        sudo systemctl restart docker
+
+
         final_message: "The system is finally up, after $UPTIME seconds"
       networks:
         - port: { get_resource: master_port }
