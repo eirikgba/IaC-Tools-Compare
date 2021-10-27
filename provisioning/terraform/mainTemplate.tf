@@ -1,3 +1,7 @@
+# This is a template.
+# Users must fill in their credentials.
+
+
 # Define required providers
 terraform {
 required_version = ">= 0.14.0"
