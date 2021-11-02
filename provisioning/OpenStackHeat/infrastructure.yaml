@@ -89,19 +89,10 @@ resources:
 
         sudo usermod -aG docker ubuntu
         newgrp docker
-
-        echo "
-        {
-        "insecure-registries" : [ "10.212.141.146:5000" ]
-        }
-        " >  
+ 
         sudo systemctl daemon-reload
         sudo systemctl restart docker
 
-        docker run --name=webserver -p 80:80 -d 10.212.141.146:5000/webserver
-
-
-        final_message: "The system is finally up, after $UPTIME seconds"
       networks:
         - port: { get_resource: master_port }
         
