@@ -10,18 +10,19 @@ resource "openstack_compute_instance_v2" "Instance" {
     flavor_name = "m1.small"
     security_groups = ["default"]
     key_pair = "${openstack_compute_keypair_v2.id_rsa.name}"
-    user_data = file("init.sh")
+#    user_data = file("init.sh")
 }
 
-resource "openstack_networking_floatingip_v2" "fip" {
+resource "openstack_compute_floatingip_v2" "fip" {
   count = var.instance_num
   pool = "ntnu-internal"
 }
 
 resource "openstack_compute_floatingip_associate_v2" "fip" {
   count = var.instance_num
-  floating_ip = element(openstack_networking_floatingip_v2.fip.*.address, count.index)
+  floating_ip = element(openstack_compute_floatingip_v2.fip.*.address, count.index)
   instance_id = element(openstack_compute_instance_v2.Instance.*.id, count.index)
+  depends_on  = [openstack_compute_instance_v2.Instance]
 }
 
 output "instance_ips" {
@@ -33,7 +34,7 @@ output "instance_ips" {
 
 output "float_ips" {
     value = {
-        for fip in openstack_networking_floatingip_v2.fip:
+        for fip in openstack_compute_floatingip_v2.fip:
             fip.fixed_ip => fip.address
     }
 }
