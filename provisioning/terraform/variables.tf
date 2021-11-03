@@ -3,9 +3,20 @@ variable "instance_name" {
     default  = "terraform"
 }
 
-
 variable "instance_num" {
     description = "The Number of instances to be created."
-    default  = 3
+    default  = "2"
+}
+
+variable "image_name" {
+    default = "Ubuntu Server 20.04 LTS (Focal Fossa) amd64"
+}
+
+variable "flavor_name" {
+    default = "m1.small"
+}
+
+variable "security_groups" {
+    default = "default"
 }
 

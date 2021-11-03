@@ -31,16 +31,16 @@ resource "openstack_networking_router_interface_v2" "router_interface_1" {
 }
 
 resource "openstack_compute_instance_v2" "Instance" {
-    depends_on = [openstack_networking_subnet_v2.subnet_1]
-    count = var.instance_num
-    name = format("%s-%02d", var.instance_name, count.index+1)
-    image_name = "Ubuntu Server 20.04 LTS (Focal Fossa) amd64"
-    flavor_name = "m1.small"
-    security_groups = ["default"]
-    key_pair = "${openstack_compute_keypair_v2.id_rsa.name}"
-#    user_data = file("init.sh")
+#    depends_on      = [openstack_networking_subnet_v2.subnet_1]
+    count           = var.instance_num
+    name            = format("%s-%02d", var.instance_name, count.index+1)
+    image_name      = var.image_name
+    flavor_name     = var.flavor_name
+    security_groups = var.security_groups
+    key_pair        = "${openstack_compute_keypair_v2.id_rsa.name}"
+#   user_data       = file("init.sh")
     network {
-      name = "network_1"
+      name    = "network_1"
   }
 }
 
