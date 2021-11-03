@@ -6,6 +6,6 @@ variable "instance_name" {
 
 variable "instance_num" {
     description = "The Number of instances to be created."
-    default  = 1
+    default  = 3
 }
 
