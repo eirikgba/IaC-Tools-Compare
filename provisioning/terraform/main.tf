@@ -1,5 +1,3 @@
-
-
 resource "openstack_networking_router_v2" "router_1" {
   name                = "my_router"
   admin_state_up      = true
@@ -11,14 +9,12 @@ resource "openstack_networking_network_v2" "network_1" {
   admin_state_up = "true"
 }
 
-
 resource "openstack_networking_subnet_v2" "subnet_1" {
   name       = "subnet_1"
   network_id = "${openstack_networking_network_v2.network_1.id}"
   cidr       = "192.168.10.0/24"
   ip_version = 4
 }
-
 
 resource "openstack_compute_keypair_v2" "id_rsa" {
     name = "id_rsa"
@@ -31,19 +27,18 @@ resource "openstack_networking_router_interface_v2" "router_interface_1" {
 }
 
 resource "openstack_compute_instance_v2" "Instance" {
-#    depends_on      = [openstack_networking_subnet_v2.subnet_1]
+    depends_on      = [openstack_networking_subnet_v2.subnet_1]
     count           = var.instance_num
     name            = format("%s-%02d", var.instance_name, count.index+1)
     image_name      = var.image_name
     flavor_name     = var.flavor_name
     security_groups = var.security_groups
     key_pair        = "${openstack_compute_keypair_v2.id_rsa.name}"
-#   user_data       = file("init.sh")
+    user_data       = file("init.sh")
     network {
       name    = "network_1"
   }
 }
-
 resource "openstack_compute_floatingip_v2" "fip" {
   count = var.instance_num
   pool = "ntnu-internal"

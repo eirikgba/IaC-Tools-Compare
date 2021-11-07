@@ -5,7 +5,7 @@ variable "instance_name" {
 
 variable "instance_num" {
     description = "The Number of instances to be created."
-    default  = "2"
+    default  = "4"
 }
 
 variable "image_name" {
@@ -17,6 +17,6 @@ variable "flavor_name" {
 }
 
 variable "security_groups" {
-    default = "default"
+    default = ["default"]
 }
 
