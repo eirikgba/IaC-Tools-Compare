@@ -13,8 +13,8 @@ sudo apt install puppetserver
 
 sudo nano /etc/hosts
 	[master-ip] puppetmaster puppet
-	[client1-ip] puppetclient1 puppet
-	[client2-ip] puppetclient2 puppet
+	[client1-ip] puppetclient1
+	[client2-ip] puppetclient2
 
 sudo ufw allow 8140/tcp
 
@@ -34,8 +34,8 @@ sudo ufw allow 8140/tcp
 
 sudo nano /etc/hosts
 	[master-ip] puppetmaster puppet
-	[client1-ip] puppetclient1 puppet
-	[client2-ip] puppetclient2 puppet
+	[client1-ip] puppetclient1
+	[client2-ip] puppetclient2
 
 sudo systemctl start puppet
 sudo systemctl enable puppet
