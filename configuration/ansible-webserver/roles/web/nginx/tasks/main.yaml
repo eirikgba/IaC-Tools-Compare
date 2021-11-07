@@ -11,22 +11,9 @@
     state: latest
   become: yes
 
-#- name: "remove www dir"
-#  file:
-#    state: absent
-#    path: /var/www/html
-
-#- name: "create www directory"
-#  file:
-#    sudo: yes
-#    path: /var/www/html
-#    state: directory
-#    mode: 0775
 
 - name: "copy custom index.html file"
   copy:
-    #sudo: yes
-    #become: yes
     src: index.html
     dest: /var/www/html/
     owner: root
